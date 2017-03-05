@@ -14,7 +14,7 @@ function MinReporter (baseReporterDecorator, formatError, config) {
     // Clear screen
     //this.write('\u001b[2J')
     // Set cursor position
-    this.write('\u001b[1;3H')
+    //this.write('\u001b[1;3H')
   }
 
   this.specFailure = function (browsers, result) {
