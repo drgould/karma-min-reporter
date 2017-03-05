@@ -12,7 +12,7 @@ function MinReporter (baseReporterDecorator, formatError, config) {
     this._start = new Date()
 
     // Clear screen
-    this.write('\u001b[2J')
+    //this.write('\u001b[2J')
     // Set cursor position
     this.write('\u001b[1;3H')
   }
