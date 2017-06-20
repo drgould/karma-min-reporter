@@ -1,8 +1,8 @@
 {
-  "name": "karma-min-reporter",
-  "version": "0.1.0",
+  "name": "karma-minimal-reporter",
+  "version": "0.0.1",
   "description": "Minimal test reporter for Karma",
-  "author": "Jim Fitzpatrick",
+  "author": "Derek Gould",
   "license": "MIT",
   "main": "index.js",
   "files": [
@@ -18,13 +18,13 @@
     "test": "npm run test:unit && npm run test:functional",
     "validate": "npm test && npm run coveralls"
   },
-  "homepage": "https://github.com/jimf/karma-min-reporter",
+  "homepage": "https://github.com/drgould/karma-minimal-reporter",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jimf/karma-min-reporter"
+    "url": "https://github.com/drgould/karma-minimal-reporter"
   },
   "bugs": {
-    "url": "https://github.com/jimf/karma-min-reporter/issues"
+    "url": "https://github.com/drgould/karma-minimal-reporter/issues"
   },
   "keywords": [
     "karma-plugin",

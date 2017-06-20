@@ -1,50 +1,83 @@
-var lib = require('./lib')
+const lib = require( './lib' );
 
-function MinReporter (baseReporterDecorator, formatError, config) {
-  baseReporterDecorator(this)
+function MinimalReporter( baseReporterDecorator, formatError, config ) {
+    baseReporterDecorator( this );
 
-  this._failures = []
+    // temp list of logs
+    let logs = [];
 
-  var _onRunStart = this.onRunStart
-  this.onRunStart = function () {
-    _onRunStart.call(this)
+    Object.assign( this, {
+        _failures : [],
+        _logs : [],
+        _onRunStart : this.onRunStart,
+        _onSpecComplete : this.onSpecComplete,
 
-    this._start = new Date()
+        _addLogsToMap( spec ) {
+            if ( logs.length ) {
+                this._logs.push( {
+                    spec,
+                    logs,
+                } );
+                logs = [];
+            }
+        },
 
-    // Clear screen
-    //this.write('\u001b[2J')
-    // Set cursor position
-    //this.write('\u001b[1;3H')
-  }
+        onBrowserLog( browser, log, type ) {
+            logs.push( {
+                browser,
+                type,
+                log,
+            } );
+        },
 
-  this.specFailure = function (browsers, result) {
-    this._failures.push(result)
-  }
+        onRunComplete( browsers, result ) {
+            if ( browsers.length >= 1 && !result.disconnected ) {
+                // BrowserCollection lacks a reduce method.
+                const skipped =
+                    browsers
+                        .map( browser => ( browser.lastResult.skipped || 0 ) )
+                        .reduce( ( acc, skips ) => ( acc + skips ) );
 
-  this.onRunComplete = function (browsers, result) {
-    if (browsers.length >= 1 && !result.disconnected) {
-      // BrowserCollection lacks a reduce method.
-      var skipped = browsers.map(function (browser) {
-        return browser.lastResult.skipped || 0
-      }).reduce(function (acc, skips) {
-        return acc + skips
-      }, 0)
+                this.write( lib.formatResults( {
+                    formatError,
+                    skipped,
+                    duration : ( new Date() ) - this._start,
+                    failures : this._failures,
+                    logs : this._logs,
+                    passed : result.success,
+                    useColors : Boolean( config.colors ),
+                } ) );
+            }
+            this._failures.splice( 0, this._failures.length );
+        },
 
-      this.write(lib.formatResults({
-        passed: result.success,
-        skipped: skipped,
-        failures: this._failures,
-        duration: (new Date()) - this._start,
-        formatError: formatError,
-        useColors: Boolean(config.colors)
-      }))
-    }
-    this._failures.splice(0, this._failures.length)
-  }
+        onRunStart() {
+            this._onRunStart.call( this );
+            this._start = new Date();
+        },
+
+        onSpecComplete( browsers, result ) {
+            this._onSpecComplete.apply( this, arguments );
+            if ( !result.skipped ) {
+                this._addLogsToMap( result );
+            }
+        },
+
+        specFailure( browsers, result ) {
+            this._failures.push( result );
+        },
+    } );
 }
 
-MinReporter.$inject = ['baseReporterDecorator', 'formatError', 'config']
+MinimalReporter.$inject = [
+    'baseReporterDecorator',
+    'formatError',
+    'config',
+];
 
 module.exports = {
-  'reporter:min': ['type', MinReporter]
-}
+    'reporter:minimal' : [
+        'type',
+        MinimalReporter,
+    ],
+};
