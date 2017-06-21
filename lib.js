@@ -163,7 +163,7 @@ exports.formatResults = function ( opts ) {
             opts.logs.length
                 ? format( LOGS, [ opts.logs.length ], opts.useColors && 'yellow' )
                     .concat( formatLogs( opts.logs, opts.formatError, opts.useColors ) )
-                : '',
+                : ''
         )
         .concat( '\n' );
 };
