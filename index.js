@@ -53,6 +53,7 @@ function MinimalReporter( baseReporterDecorator, formatError, config ) {
 
         onRunStart() {
             this._onRunStart.call( this );
+            this._logs = [];
             this._start = new Date();
         },
 

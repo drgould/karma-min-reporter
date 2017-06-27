@@ -1,6 +1,6 @@
 {
   "name": "karma-minimal-reporter",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Minimal test reporter for Karma",
   "author": "Derek Gould",
   "license": "MIT",
